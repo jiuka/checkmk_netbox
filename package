@@ -1,20 +1,23 @@
 {
-    'author': u'',
-    'description': u'',
-    'download_url': '',
+    'author': u'IT Team - Supercomputing Systems AG ',
+    'description': u'Netbox Report Check',
+    'download_url': 'https://github.com/scsitteam/checkmk_netbox',
     'files': {
-        'agent_based': [],
-        'agents': [],
+        'agent_based': ['netbox_reports'],
+        'agents': ['special/agent_netbox'],
         'checkman': [],
-        'checks': [],
+        'checks': ['agent_netbox'],
         'doc': [],
         'inventory': [],
         'notifications': [],
         'pnp-templates': [],
-        'web': []
+        'web': [
+            'plugins/wato/check_parameters_netbox_reports.py',
+            'plugins/wato/datasource_netbox.py',
+        ]
     },
-    'name': '',
-    'title': u'',
+    'name': 'Netbox',
+    'title': u'Netbox',
     'version': '0.1',
     'version.min_required': '2.0.0',
     'version.packaged': '2.0.0'
