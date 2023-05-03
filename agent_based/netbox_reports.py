@@ -39,6 +39,7 @@ from .agent_based_api.v1 import (
 
 from datetime import datetime
 
+
 def parse_netbox_reports(string_table):
     parsed = {}
 
@@ -64,48 +65,52 @@ def parse_netbox_reports(string_table):
     # print (parsed)
     return parsed
 
+
 register.agent_section(
     name = "netbox_reports",
     parse_function = parse_netbox_reports,
 )
 
+
 def discover_netbox_reports(section):
     for name in section:
         yield Service(item=name)
+
 
 def check_netbox_reports(item, params, section):
 
     report = section[item]
 
     now = datetime.now()
-    if not 'last_run' in report:
+    if 'last_run' not in report:
         yield Result(state=State.UNKNOWN, summary=(f"Report \"{item}\" not yet executed"))
     else:
         age = now - report['last_run']
         yield from check_levels(
-                value=age.total_seconds(),
-                levels_upper=params.get('maxage', None),
-                render_func=lambda f: render.timespan(f if f > 0 else -f),
-                label='Last Run' if age.total_seconds() > 0 else "Last Run in",
-            )
+            value=age.total_seconds(),
+            levels_upper=params.get('maxage', None),
+            render_func=lambda f: render.timespan(f if f > 0 else -f),
+            label='Last Run' if age.total_seconds() > 0 else "Last Run in",
+        )
 
         for test_name in report:
             if test_name == 'last_run':
                 continue
 
             yield Result(state = State.OK, summary = f"{test_name}",
-                                           details = f"{test_name}: {report[test_name]['result']}")
+                         details = f"{test_name}: {report[test_name]['result']}")
 
             if report[test_name]['result']['warning'] > 0:
-                yield Result (state = State.WARN,
-                              summary = f"Warning: {report[test_name]['result']['warning']}")
+                yield Result(state = State.WARN,
+                             summary = f"Warning: {report[test_name]['result']['warning']}")
 
             if report[test_name]['result']['failure'] > 0:
-                yield Result (state = State.WARN,
-                         summary = f"Failure: {report[test_name]['result']['failure']}")
+                yield Result(state = State.WARN,
+                             summary = f"Failure: {report[test_name]['result']['failure']}")
 
             for key, value in report[test_name]['result'].items():
-                yield Metric (f"{test_name}_{key}", value)
+                yield Metric(f"{test_name}_{key}", value)
+
 
 register.check_plugin(
     name = "netbox_reports",
@@ -113,5 +118,5 @@ register.check_plugin(
     discovery_function = discover_netbox_reports,
     check_function = check_netbox_reports,
     check_ruleset_name = "netbox_reports",
-    check_default_parameters = {'maxage': (2*24*3600, 7*24*3600)},
+    check_default_parameters = {'maxage': (2 * 24 * 3600, 7 * 24 * 3600)},
 )

@@ -33,6 +33,7 @@ from cmk.gui.plugins.wato import (
     RulespecGroupCheckParametersApplications,
 )
 
+
 def _item_spec_netbox_reports():
     return TextAscii(title=_('Name of the Netbox Report'),
                      allow_empty=False)
