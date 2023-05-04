@@ -19,6 +19,7 @@
 
 import logging
 import requests
+import json
 from functools import cached_property
 
 from cmk.special_agents.utils.agent_common import (
@@ -63,9 +64,10 @@ class AgentNetbox:
         self.args = args
 
         self.section_reports()
+        self.section_data_sources()
 
     def section_reports(self):
-        print('<<<netbox_reports:sep(44)>>>')
+        print('<<<netbox_report:sep(44)>>>')
         for report in self.get_reports():
             detail = self.get_report_detail(report)
             for test_name in report['test_methods']:
@@ -98,6 +100,22 @@ class AgentNetbox:
             return dict(data=None)
         response = self.client.get(report['result']['url'], timeout=self.args.timeout)
         return response.json()
+
+    def section_data_sources(self):
+        print('<<<netbox_data_sources>>>')
+        for data_sorce in self.get_data_sources():
+            print(json.dumps(dict(
+                name=data_sorce['name'],
+                description=data_sorce['description'],
+                enabled=data_sorce['enabled'],
+                status=data_sorce['status'],
+                last_updated=data_sorce['last_updated'],
+                file_count=data_sorce['file_count'],
+            )))
+
+    def get_data_sources(self):
+        response = self.client.get('{}/core/data-sources/'.format(self.args.url), timeout=self.args.timeout)
+        return response.json()['results']
 
     @cached_property
     def client(self):
