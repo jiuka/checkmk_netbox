@@ -38,6 +38,7 @@ SAMPLE_SECTION = {
     "test": {"name": "test", "description": "test", "enabled": True, "status": {"value": "completed", "label": "Completed"}, "last_updated": datetime.datetime(2023, 5, 3, 13, 13, 29, 965921), "file_count": 1}
 }
 
+
 @pytest.mark.parametrize('string_table, result', [
     ([], {}),
     (
@@ -56,10 +57,11 @@ def test_parse_dell_storage_psu(string_table, result):
 def test_discovery_netbox_data_source(section, result):
     assert list(netbox_data_source.discovery_netbox_data_source(section)) == result
 
+
 @pytest.mark.freeze_time('2023-05-04 06:55')
 @pytest.mark.parametrize('section, params, result', [
     (SAMPLE_SECTION, {}, [Result(state=State.OK, summary='Last Sync: 17 hours 41 minutes'), Metric('file', 1.0)]),
-    (SAMPLE_SECTION, {'maxage': (2 * 3600, 7* 3600)}, [Result(state=State.CRIT, summary='Last Sync: 17 hours 41 minutes (warn/crit at 2 hours 0 minutes/7 hours 0 minutes)'), Metric('file', 1.0)]),
+    (SAMPLE_SECTION, {'maxage': (2 * 3600, 7 * 3600)}, [Result(state=State.CRIT, summary='Last Sync: 17 hours 41 minutes (warn/crit at 2 hours 0 minutes/7 hours 0 minutes)'), Metric('file', 1.0)]),
 ])
 def test_check_netbox_data_source(section, params, result):
     assert list(netbox_data_source.check_netbox_data_source('test', params, section)) == result

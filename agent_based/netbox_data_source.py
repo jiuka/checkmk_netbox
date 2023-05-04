@@ -75,7 +75,7 @@ def check_netbox_data_source(item, params, section):
         render_func=lambda f: render.timespan(f if f > 0 else -f),
         label='Last Sync' if age.total_seconds() > 0 else "Last Sync in",
     )
-    
+
     yield Metric('file', data_source['file_count'])
 
 
