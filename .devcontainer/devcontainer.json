@@ -8,16 +8,23 @@
 		"args": { "VARIANT": "2.1.0-latest" }
 	},
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
-	},
+	"customizations": {
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": { 
+				"terminal.integrated.profiles.linux": {
+					"bash": { "path": "/bin/bash" }
+				},
+  				"terminal.integrated.defaultProfile.linux": "bash"
+			},
 
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-python.python",
-		"littlefoxteam.vscode-python-test-adapter"
-	],
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"littlefoxteam.vscode-python-test-adapter"
+			],
+		}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -29,7 +36,7 @@
 	"remoteUser": "cmk",
 
 	"remoteEnv": {
-		"PATH": "${containerEnv:PATH}:/omd/sites/cmk/bin:/omd/sites/cmk/local/lib/python3/bin/",
+		"PATH": "/omd/sites/cmk/bin:/omd/sites/cmk/local/lib/python3/bin/:${containerEnv:PATH}",
 		"OMD_ROOT": "/omd/sites/cmk",
 		"OMD_SITE": "cmk",
 		"CMK_SITE_ID": "cmk",
