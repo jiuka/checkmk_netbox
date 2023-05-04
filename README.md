@@ -1,12 +1,12 @@
-# Checkmk extension for ...
+# Checkmk extension for Netbox
 
-![build](https://github.com/jiuka/checkmk_phion/workflows/build/badge.svg)
-![flake8](https://github.com/jiuka/checkmk_phion/workflows/Lint/badge.svg)
-![pytest](https://github.com/jiuka/checkmk_phion/workflows/pytest/badge.svg)
+![build](https://github.com/scsitteam/checkmk_netbox/workflows/build/badge.svg)
+![flake8](https://github.com/scsitteam/checkmk_netbox/workflows/Lint/badge.svg)
+![pytest](https://github.com/scsitteam/checkmk_netbox/workflows/pytest/badge.svg)
 
 ## Description
 
-This is a template to develop Checkmk Extensions
+Checks [Netbox](https://netbox.dev/) Reports and Datasources for status and age.
 
 ## Development
 
