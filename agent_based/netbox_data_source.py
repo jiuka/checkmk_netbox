@@ -20,14 +20,15 @@
 # <<<netbox_data_source>>>
 # {"name": "test", "description": "test", "enabled": true, "status": {"value": "completed", "label": "Completed"}, "last_updated": "2023-05-03T13:13:29.965921+02:00", "file_count": 1}
 
-from .agent_based_api.v1 import (
+from cmk.agent_based.v2 import (
     check_levels,
     Metric,
-    register,
     render,
     Result,
     Service,
     State,
+    AgentSection,
+    CheckPlugin,
 )
 
 import json
@@ -39,17 +40,16 @@ def parse_netbox_data_source(string_table):
 
     for line in string_table:
         data = json.loads(line[0])
-        print(f"::::: {data}")
 
-        if 'last_updated' in data:
-            data['last_updated'] = datetime.fromisoformat(data['last_updated']).replace(tzinfo=None)
+        if 'last_synced' in data:
+            data['last_synced'] = datetime.fromisoformat(data['last_synced']).replace(tzinfo=None)
 
         parsed[data['name']] = data
 
     return parsed
 
 
-register.agent_section(
+agent_section_netbox_data_source = AgentSection(
     name = "netbox_data_source",
     parse_function = parse_netbox_data_source,
 )
@@ -68,7 +68,7 @@ def check_netbox_data_source(item, params, section):
         yield Result(state = State.CRIT, summary = f"Status is {data_source['status']['label']}")
 
     now = datetime.now()
-    age = now - data_source['last_updated']
+    age = now - data_source['last_synced']
     yield from check_levels(
         value=age.total_seconds(),
         levels_upper=params.get('maxage', None),
@@ -79,11 +79,11 @@ def check_netbox_data_source(item, params, section):
     yield Metric('file', data_source['file_count'])
 
 
-register.check_plugin(
+check_plugin_netbox_data_source = CheckPlugin(
     name = "netbox_data_source",
     service_name = "Netbox DataSource %s",
     discovery_function = discovery_netbox_data_source,
     check_function = check_netbox_data_source,
     check_ruleset_name = "netbox_data_source",
-    check_default_parameters = {'maxage': (2 * 24 * 3600, 7 * 24 * 3600)},
+    check_default_parameters = {'maxage': ('fixed', (2 * 24 * 3600, 7 * 24 * 3600))},
 )

@@ -3,26 +3,21 @@
     'description': u'Netbox Report Check',
     'download_url': 'https://github.com/scsitteam/checkmk_netbox',
     'files': {
-        'agent_based': [
-            'netbox_data_source.py',
-            'netbox_report.py'
+        'cmk_addons_plugins': [
+            'netbox/graphing/netbox_script.py',
+            'netbox/agent_based/netbox_data_source.py',
+            'netbox/agent_based/netbox_script.py',
+            'netbox/lib/agent.py',
+            'netbox/libexec/agent_netbox',
+            'netbox/rulesets/agent_netbox.py',
+            'netbox/rulesets/check_parameters_netbox_data_source.py',
+            'netbox/rulesets/check_parameters_netbox_script.py',
+            'netbox/server_side_calls/agent_netbox.py',
         ],
-        'agents': ['special/agent_netbox'],
-        'checkman': [],
-        'checks': ['agent_netbox'],
-        'doc': [],
-        'inventory': [],
-        'notifications': [],
-        'pnp-templates': [],
-        'web': [
-            'plugins/wato/check_parameters_netbox_data_source.py',
-            'plugins/wato/check_parameters_netbox_report.py',
-            'plugins/wato/datasource_netbox.py',
-        ]
     },
     'name': 'netbox',
     'title': u'Netbox',
-    'version': '0.1',
-    'version.min_required': '2.0.0',
-    'version.packaged': '2.0.0'
+    'version': '0.2.1',
+    'version.min_required': '2.3.0',
+    'version.packaged': '2.2.0'
 }
